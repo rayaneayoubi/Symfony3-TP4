@@ -1,0 +1,120 @@
+<?php
+
+namespace AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\EventDispatcher\Event;
+use AppBundle\Entity\Producers;
+
+
+/**
+ * @Route("/producers")
+ */
+class ProducersController extends Controller
+{
+    /**
+     * @Route("/index",name="producers_index")
+     */
+    public function indexAction()
+    {
+         $producers=$this->getDoctrine()->getRepository(Producers::class)->findAll();
+        return $this->render('AppBundle:Producers:index.html.twig', array(
+            'producers'=>$producers
+        ));
+    }
+
+    /**
+     * @Route("/add",name="producers_add")
+     */
+    public function addAction(Request $request)
+    {       $producers= new Producers();
+             $forma = $this->createFormBuilder($producers)
+             ->add('name',TextType::class,array())
+            ->add('type', CheckboxType::class, array(
+              'label'    => 'Private',
+               'required' => false ))
+             ->add('submit',SubmitType::class,array(
+               'label'=> 'Add'
+             ))
+             ->getForm();
+            $forma->handleRequest($request);
+            if ($forma->isSubmitted()) {
+              $producers = $forma->getData();
+              $em = $this->getDoctrine()->getManager();
+              $em->persist($producers);
+              $em->flush();
+              return $this->redirectToRoute('producers_index');
+            }
+        return $this->render('AppBundle:Producers:add.html.twig', array(
+            'forma'=>$forma->createView()
+         ));
+    }
+
+    /**
+   * @Route("/delete", name="producers_delete")
+   * @Method("DELETE")
+   */
+     public function deleteAction(Request $request, $id)
+     {
+         $repository = $this->getDoctrine()->getRepository(Producers::class);
+         $producers = $repository->find($id);
+
+         $form = $this->createDeleteForm($producers);
+         $form->handleRequest($request);
+
+         if ($form->isSubmitted() && $form->isValid()) {
+             $em = $this->getDoctrine()->getManager();
+             $em->remove($producers);
+             $em->flush();
+         }
+
+         return $this->redirectToRoute('producers_index');
+     }
+     /**
+     *
+     * @param Producers $producers
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+     private function createDeleteForm(Producers $producers)
+         {
+             return $this->createFormBuilder()
+                 ->setAction($this->generateUrl('producers_delete', array('id' => $producers->getId())))
+                 ->setMethod('DELETE')
+                 ->getForm()
+                 ;
+         }
+    /**
+     * @Route("/edit", name="producers_edit")
+     */
+    public function editAction(Request $request,$id)
+    {    $id;
+
+               $forma = $this->createFormBuilder($producers)
+               ->add('name',TextType::class,array())
+              ->add('type', CheckboxType::class, array(
+                'label'    => 'Private',
+                 'required' => false ))
+               ->add('submit',SubmitType::class,array(
+                 'label'=> 'Edit'
+               ))
+               ->getForm();
+              $forma->handleRequest($request);
+              if ($forma->isSubmitted()) {
+                $producers= $em->getRepository(Producers::class)->find($id);
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($producers);
+                $em->flush();
+                return $this->redirectToRoute('producers_index');
+              }
+          return $this->render('AppBundle:Producers:add.html.twig', array(
+              'forma'=>$forma->createView()
+           ));
+      }
+
+    }

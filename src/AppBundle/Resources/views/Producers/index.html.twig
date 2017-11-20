@@ -1,0 +1,38 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Producers{% endblock %}
+
+{% block body %}
+<h1>Welcome to the Energy Producers </h1>
+<table class="table table-bordered table-striped" style="width:50%">
+  <tr>
+    <th>Society name</th>
+    <th>type</th>
+    <th>Country</th>
+    <th>Action For Society</th>
+  </tr>
+  {% for p in producers %}
+
+  <tr>
+    <td>{{p.name}}</td>
+    <td>
+      {% if p.type == true %} Private Society
+      {% else %} Public Society
+      {% endif %}
+    </td>
+    <td>{% if p.pays | length > 0 %}
+      {% for r in p.pays %}
+       <div> {{ r.name }} </div>
+      {% endfor %}
+    {% endif %}</td>
+    <td class="nav nav-pills">
+  <a href="{{path("producers_add")}}" class="btn btn-xs btn-primary">Add</a>
+         <a href="{{path("producers_edit",{'id': p.id})}}" class="btn btn-xs btn-warning">Edit</a>
+          <a href="{{path("producers_delete",{'id': p.id})}}" class="btn btn-xs btn-danger">Delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+{% endblock %}

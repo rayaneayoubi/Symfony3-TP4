@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <style>
+        .container{
+          color: :red;
+             }
+          .submenu{
+            display:none;
+            position:absolute;
+            top: 37px;
+            left:25px;
+            background-color: #ccc;
+            padding: 8px;
+            list-style: none;
+            border-radius: 15px;
+            width: 150px;
+          }    nav>ul>li {
+                position: relative;
+              }
+              li:hover >ul.submenu{
+                display: block;
+                cursor: pointer;
+              }
+
+            </style>
+            {% block css %}{% endblock %}
+    </head>
+    <body class="container">
+      <nav>
+        <ul class="nav nav-pills">
+          <li> <a href="{{path("producers_index")}}">Producers</a> </li>
+            <li> <a href="{{path("pays_index")}}">Country</a> </li>
+          <li>  <a>More <a>
+            <ul class="submenu">
+              <li> <a href="{{path("pays_add")}}"> Add Country</a> </li>
+             <li><a href="{{path("producers_add")}}">Add Producers</a></li>
+           </ul>
+          </li>
+        </ul>
+      </nav>
+        {% block body %}{% endblock %}
+
+    </body>
+
+</html>

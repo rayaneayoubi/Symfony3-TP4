@@ -1,0 +1,20 @@
+{% extends "::base.html.twig" %}
+{% block body %}
+<h2>Welcome to the Energy world</h2>
+<table class="table table-bordered table-striped" style="width:50%">
+  <tr>
+    <th>Country</th>
+    <th>Action For Countries</th>
+  </tr>
+  {% for c in pays %}
+
+  <tr>
+    <td>{{c.name}}</td>
+    <td class="nav nav-pills">
+         <a href="{{path("pays_add")}}" class="btn btn-xs btn-primary">Add</a>
+         <a href="{{path("pays_delete",{'id': c.id})}}" class="btn btn-xs btn-danger">Delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
